@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+
+    <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://oxdef.info//static/custom.css" rel="stylesheet">
+
+
+    <link href="https://oxdef.info/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="oxdef RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+
+
+<meta name="author" content="oxdef" />
+<meta name="description" content="If you don&#39;t know about ClickJacking (UI Redressing) attack you can read the relevant article on OWASP website. There are two main ways to prevent ClickJacking: frame breaking script and X-Frame-Options header (see RFC 7034). While first one is technologically flawed solution the second one is good enough in the …" />
+<meta name="keywords" content="csp, ui-redressing, clickjacking">
+
+<meta property="og:site_name" content="oxdef"/>
+<meta property="og:title" content="X-Frame-Options or CSP frame-ancestors?"/>
+<meta property="og:description" content="If you don&#39;t know about ClickJacking (UI Redressing) attack you can read the relevant article on OWASP website. There are two main ways to prevent ClickJacking: frame breaking script and X-Frame-Options header (see RFC 7034). While first one is technologically flawed solution the second one is good enough in the …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://oxdef.info/posts/csp-frame-ancestors"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-04-02 22:48:00+03:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://oxdef.info/author/oxdef.html">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="csp"/>
+<meta property="article:tag" content="ui-redressing"/>
+<meta property="article:tag" content="clickjacking"/>
+<meta property="og:image" content="/images/dots.png">
+
+  <title>oxdef &ndash; X-Frame-Options or CSP frame-ancestors?</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://oxdef.info">
+        <img src="/images/dots.png" alt="oxdef" title="oxdef">
+      </a>
+      <h1><a href="https://oxdef.info">oxdef</a></h1>
+
+<p>Some thoughts on web security</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://oxdef.info/pages/about">About</a></li>
+          <li><a href="https://oxdef.info/pages/csp-reporter">CSP Reporter</a></li>
+          <li><a href="https://oxdef.info/pages/csp-tester">CSP Tester</a></li>
+
+          <li><a href="https://www.owasp.org/index.php/Russia" target="_blank">OWASP Russia</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-envelope-o" href="mailto:oxdef@oxdef.info" target="_blank"><i class="fa fa-envelope-o"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/oxdef" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/oxdef" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-rss" href="/rss" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="csp-frame-ancestors">X-Frame-Options or CSP frame-ancestors?</h1>
+    <p>
+          Posted on 02 April 2016 in <a href="https://oxdef.info/category/misc">misc</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>If you don't know about ClickJacking (UI Redressing) attack you can read  <a href="https://www.owasp.org/index.php/Clickjacking">the relevant article</a> on OWASP website.</p>
+<p>There are two main ways to prevent ClickJacking: frame breaking script and <code>X-Frame-Options</code> header (see <a href="https://datatracker.ietf.org/doc/rfc7034/">RFC 7034</a>). While first one is technologically flawed solution the second one is good enough in the most cases. Except situations when you need to give permission for framing your page to multiple sites. Since version 1.1 <a href="https://www.w3.org/TR/CSP/">Content Security Policy</a> has another ClickJacking defensive approach via <code>frame-ancestors</code> directive. Let's compare it with <code>X-Frame-Options</code>.</p>
+<p>Basic (<code>DENY</code> and <code>SAMEORIGIN</code>) <code>X-Frame-Options</code> support in desktop browsers:</p>
+<ul>
+<li>Google Chrome 4+</li>
+<li>Internet Explorer 8+</li>
+<li>Safari 4+</li>
+<li>Mozilla Firefox 3.6+</li>
+<li>Yandex.Browser</li>
+</ul>
+<p>According to <a href="https://www.w3.org/TR/CSP/#directive-frame-ancestors">CSP2</a>: </p>
+<blockquote>
+<p>The 'none' source expression is roughly equivalent to that header’s DENY, 'self' to SAMEORIGIN, and so on. 
+The major difference is that many user agents implement SAMEORIGIN such that it only matches against the top-level document’s location. This directive checks each ancestor. If any ancestor doesn’t match, the load is cancelled.
+The frame-ancestors directive obsoletes the X-Frame-Options header.</p>
+</blockquote>
+<p>In following example framing of protected resource is only allowed for <code>https://site1.com</code> and <code>https://site2.com</code></p>
+<pre><code class="csp">Content-Security-Policy: 
+  frame-ancestors https://site1.com https://site2.com
+</code></pre>
+
+<p><code>frame-ancestors</code> allows a website to authorize multiple domains using the normal CSP symantics (in contrast to <code>X-Frame-Options</code>, which allows only one) but <a href="https://www.w3.org/TR/CSP/#frame-ancestors-multiple-source-values">be careful with it</a>.</p>
+<p>Also take into account that <code>frame-ancestors</code> does not fall back to the default sources when the directive is not defined (like <code>form-action</code> and <code>base-uri</code>). That is, such policy </p>
+<pre><code class="csp">Content-Security-Policy: 
+  default-src 'none';
+</code></pre>
+
+<p>will still allow the resource to be framed from <strong>anywhere</strong> and you should explicitly specify <code>frame-ancestors</code> directive:</p>
+<pre><code class="csp">Content-Security-Policy: 
+  default-src 'none';
+  frame-ancestors 'none'
+</code></pre>
+
+<p>CSP <code>frame-ancestors</code> directive is supported in:</p>
+<ul>
+<li>Google Chrome 40+</li>
+<li>Mozilla Firefox 33+</li>
+<li>Safari Technology Preview Release</li>
+<li>Yandex.Browser</li>
+</ul>
+<p>As you can see <code>frame-ancestors</code> is  currently supported only in modern versions of major browsers :(</p>
+<p>So, what solution to choose? Correct answer is to use them together. CSP is powerful protection (when it is correctly configured). <code>X-Frame-Options</code> is good for old browsers.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://oxdef.info/tag/csp">csp</a>
+      <a href="https://oxdef.info/tag/ui-redressing">ui-redressing</a>
+      <a href="https://oxdef.info/tag/clickjacking">clickjacking</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>
+  &copy;  2018 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " oxdef ",
+  "url" : "https://oxdef.info",
+  "image": "/images/dots.png",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

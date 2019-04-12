@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+
+    <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://oxdef.info//static/custom.css" rel="stylesheet">
+
+
+    <link href="https://oxdef.info/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="oxdef RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+
+
+<meta name="author" content="oxdef" />
+<meta name="description" content="Intro Today web applications become more and more popular and process a huge amount of critical information: financial, private and sometimes even military kinds. To mitigate risks in it we can implement secure software development circle and security testing as part of it. There are 4 basic techniques for analyzing …" />
+<meta name="keywords" content="w3af">
+
+<meta property="og:site_name" content="oxdef"/>
+<meta property="og:title" content="w3af-fu: How-to test web applications with w3af"/>
+<meta property="og:description" content="Intro Today web applications become more and more popular and process a huge amount of critical information: financial, private and sometimes even military kinds. To mitigate risks in it we can implement secure software development circle and security testing as part of it. There are 4 basic techniques for analyzing …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://oxdef.info/posts/w3af-fu"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2011-09-20 18:49:00+04:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://oxdef.info/author/oxdef.html">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="w3af"/>
+<meta property="og:image" content="/images/dots.png">
+
+  <title>oxdef &ndash; w3af-fu: How-to test web applications with w3af</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://oxdef.info">
+        <img src="/images/dots.png" alt="oxdef" title="oxdef">
+      </a>
+      <h1><a href="https://oxdef.info">oxdef</a></h1>
+
+<p>Some thoughts on web security</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://oxdef.info/pages/about">About</a></li>
+          <li><a href="https://oxdef.info/pages/csp-reporter">CSP Reporter</a></li>
+          <li><a href="https://oxdef.info/pages/csp-tester">CSP Tester</a></li>
+
+          <li><a href="https://www.owasp.org/index.php/Russia" target="_blank">OWASP Russia</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-envelope-o" href="mailto:oxdef@oxdef.info" target="_blank"><i class="fa fa-envelope-o"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/oxdef" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/oxdef" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-rss" href="/rss" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="w3af-fu">w3af-fu: How-to test web applications with w3af</h1>
+    <p>
+          Posted on 20 September 2011 in <a href="https://oxdef.info/category/misc">misc</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Intro</h2>
+<p><img alt="" src="https://oxdef.info/images/2014/12/w3af-logo-1.png"></p>
+<p>Today web applications become more and more popular and process a huge amount of critical information: 
+financial, private and sometimes even military kinds. To mitigate risks in it we can implement secure 
+software development circle and security testing as part of it. There are 4 basic techniques for 
+analyzing the security of a web application:</p>
+<ul>
+<li>Automated scanning</li>
+<li>Manual penetration testing</li>
+<li>Static analysis</li>
+<li>Manual code review</li>
+</ul>
+<p><a href="http://w3af.org">w3af</a> is an Web Application Attack and Audit Framework and it can be used 
+in the first two activities. It is an <strong>open source project</strong> (GPLv2) created by Andres Riancho and developed 
+by him and a group of contributors from around the world. w3af is written in Python which as you know very 
+powerful language "with batteries". Batteries of w3af are plugins - it has at least 143 ones!</p>
+<p>w3af is divided in two main parts: the core and the plugins. The core coordinates the process and provides 
+features that plugins consume. Plugins find the vulnerabilities and in some cases are able to exploit them! 
+Plugins share information with each other using a knowledge base.</p>
+<p><img alt="w3af data flow" src="https://oxdef.info/images/2014/12/w3af_dataflow.png"></p>
+<p>In w3af we have 8 different types of plugins each for various purpose. Discovery plugins finds new URLs, forms, 
+etc. and creates a complete sitemap. webSpider is one of them and is classic example of web spider engine which parses
+HTTP response and extract links, forms, image sources and so on. Discovery plugins runs in loop - the 
+output of one discovery plugin is sent as input to the next plugin. This process continues until all plugins fail
+to find a new resource.</p>
+<p>Audit plugins takes the output of discovery plugins and find all kinds of vulnerabilities like SQL injection, XSS 
+and others. As I think audit plugins are main in w3af plugins hierarchy.</p>
+<p>Grep plugins usually simple but useful, they grep (like the UNIX utility) every HTTP request and response 
+in order to find interesting information. It can be, for example, credit card numbers, private IPs, emails 
+or risky JavaScript code.</p>
+<p>Bruteforce plugins bruteforces the HTTP Basic and Form Login authentications that are found during 
+the discovery phase. For example, formLogin plugin automatically detects login forms by finding
+forms with two parameters, one of them of type text and the other one of type password. Once the username and 
+password fields are identified, the bruteforce starts automatically.</p>
+<p>Attack plugins reads the vulnerability objects from the KB and try to exploit them. Yes, these ones can 
+give you the shell ;)</p>
+<p>Mangle plugins allows modification of requests and responses based on regular expressions like sed stream editor.
+Evasion plugins tries to evade simple intrusion detection rules. </p>
+<p>Output plugins writes framework messages to different locations (different format files) and usually are used for generating of reports. </p>
+<h2>Scanning a web application</h2>
+<p>Well, we have reviewed the architecture of w3af. Now it is time to see w3af in action. 
+Let's scan some web applications! For demonstration purposes I have made a simple but very sociable 
+web application called Itter. Yes, it is micro-blogging service and hope that it will become as popular as twi..OK, 
+it is joke :)
+This testing web application has following characteristics:</p>
+<ul>
+<li>LAMP (Linux-Apache-MySQL-PHP) stack</li>
+<li>search, private messages</li>
+<li>authentication protected user area</li>
+<li>usage of AJAX capabilities</li>
+<li>has <strong>vulnerabilities</strong>!</li>
+</ul>
+<p><img alt="Testing web application called Itter" src="https://oxdef.info/images/2014/12/itter.png"></p>
+<h3>Cold Start</h3>
+<p>For the first we will test our web application without logging-in like "cold start". 
+w3af has 2 user interfaces: one based on GTK toolkit and console UI with auto-complete feature for console hackers.
+For GUI version simply type in the console <code>./w3af_gui</code> and you will see something like on the picture:</p>
+<p><img alt="w3af main window" src="https://oxdef.info/images/2014/12/w3af_cold_start.png"></p>
+<p>There are Profile, Plugins, Target sections and Toolbox. Profile is a file where the scan configuration 
+(including target, misc and HTTP settings, enabled plugins) is saved. For testing Itter I have made "My Profile"
+configuration with webSpider and pykto (python port of famous Nikto tool) to find target URLs, 
+some grep plugins to find anything strange and interesting in HTTP transactions like DOM-based XSS 
+and some audit plugins like XSS and SQLi to find appropriate security holes. Pressing Start button and waiting for 
+the first results. We can monitor scan progress on Log tab - console with application messages, progress bar and time
+diagram will help us. Scan finished in about 20 minutes and we have the results. Oh, besides server configuration 
+flaws like Apache web server status page and suspicion on DOM-based XSS w3af has found XSS vulnerabilities! 
+Let's discover it. For the first of course XSS flaw - w3af has found it in <code>/index.php</code> and some other scripts.</p>
+<p><img alt="XSS found in &quot;cold start&quot;" src="https://oxdef.info/images/2014/12/scan_xss.png"></p>
+<p>Pykto plugin has found Apache web server status page and phpinfo() <code>/test.php</code> script. 
+From other plugins we has determined web server name, version and web platform - in our case it 
+are Apache/2.2.16 on Debian GNU/Linux system and PHP as programming language with enabled 
+session mechanism. </p>
+<p>Another cool feature which helps us to better understand web application structure is URLs tab with graphical
+representation of testing web application map and traditional tree-list. By clicking on target point on the map you 
+can zoom it in/out.</p>
+<p><img alt="Web application map" src="https://oxdef.info/images/2014/12/scan_urls.png"></p>
+<h3>Testing web 2.0 applications</h3>
+<p>Reader, as you knows, everybody now uses a lot of web 2.0 applications with heavy usage of client-side logic, 
+e.g. AJAX: social networks, email web interfaces and so on. Heavy usage of client side scripts 
+(in most cases JavaScript) means big problems for most of the scanners because they need to be
+more and more like modern web browser with JavaScript engine. One of ways to test such applications is using an 
+intercepting proxy to collect http requests for further testing. w3af has 2 proxies for such purposes. 
+One is Intercepting Proxy tool for manual testing. Another one is spiderMan plugin SpiderMan which collects URLs 
+and can be used in automated scans. Lets try it. I have enabled in case of used profile spiderMan plugin 
+and tune web browser to use 127.0.0.1:44444 as proxy address. <a href="http://getfoxyproxy.org">FoxyProxy</a> is great proxy management addon for 
+Mozilla Firefox especially when you need to quickly switch between proxies. spiderMan will be run before webSpider 
+so then last one will use its results. After starting navigating web application through spiderMan we will see
+such messages in Log section:</p>
+<div class="highlight"><pre><span></span>    [Mon 30 May 2011 12:08:22 AM MST] spiderMan proxy is running on 127.0.0.1:44444.
+    Please configure your browser to use these proxy settings and navigate the target site.
+    To exit spiderMan plugin please navigate to http://127.7.7.7/spiderMan?terminate .
+    [Mon 30 May 2011 12:15:29 AM MST] The user is navigating through the spiderMan proxy.
+    [Mon 30 May 2011 12:15:29 AM MST] Trapped fuzzable requests:
+    [Mon 30 May 2011 12:15:29 AM MST] http://localhost/index.php | Method: GET
+    [Mon 30 May 2011 12:15:32 AM MST] http://localhost/user-info.php | Method: GET
+    [Mon 30 May 2011 12:22:36 AM MST] SQL injection in a MySQL database was found at: 
+    &quot;http://localhost/user-info.php&quot;, using HTTP method GET. The sent data was: &quot;id=d&#39;z&quot;0&quot;. 
+    This vulnerability was found in the request with id 3911.
+    [Mon 30 May 2011 12:27:10 AM MST] Cross Site Scripting was found at: 
+    &quot;http://localhost/index.php&quot;, using HTTP method GET. The sent data was: 
+    &quot;limit=15&amp;u=&lt;ScRIPT&gt;a=/UzmE/%0Aalert(a.source)&lt;/SCRiPT&gt;&quot;. The modified parameter 
+    was &quot;u&quot;. This vulnerability affects ALL browsers. This vulnerability was found in the request with id 4042.
+</pre></div>
+
+
+<p>As you can see after stopping usage of spiderMan by navigating to special URL webSpider have found some new targets
+and audit plugins have found SQL injection and XSS vulnerabilities. The first one in AJAX request. </p>
+<p>w3af also has capabilities to exploit some types of vulnerabilities, e.g. even can give you the desired shell 
+on the target system! To exploit the vulnerability, you need to drag the exploit and drop it on the vulnerability 
+you want to exploit. For our example with SQL injection it can be built-in version of famous <a href="http://sqlmap.sourceforge.net">sqlmap</a>.</p>
+<p><img alt="SQL injection exploitation in action" src="https://oxdef.info/images/2014/12/sql_exploit.png"></p>
+<h2>Manual testing</h2>
+<p>w3af has a number of GUI tools for manual work with HTTP transactions. Among them:</p>
+<ul>
+<li>Sending automated HTTP requests e.g. for explore SQL injection point</li>
+<li>Manual request editor can be used to send HTTP requests to the remote web server</li>
+<li>Encode and decode strings: URL encoding, base64, MD5 hash and so on</li>
+<li>Compare HTTP responses may be useful when you finds blind SQL injection and need to know 
+  differences between HTTP responses</li>
+<li>Intercepting Proxy</li>
+<li>Export requests</li>
+</ul>
+<p><img alt="Using w3af proxy tool" src="https://oxdef.info/images/2014/12/w3af_proxy.png"></p>
+<p>Launching proxy tool starts local proxy server (don't forget, you need to tune you web browser to use it). 
+Navigating through our testing social service. History tab shows us all HTTP transactions between web browser and 
+server. In case of really big applications there will be a lot of items but we can filter it in various ways.
+For example show only transactions with parametrized request and 2xx response.
+When mouse pointer hovers over user avatar we see that in background web application sends AJAX request 
+<code>/user-info.php?id=1</code> to the web server to get user information for pop-up area. It is very interesting! 
+Lets test this page against some vulnerabilities by pressing "Audit request with..." button and selecting sqli. 
+Bingo! We have found a SQL injection! It is classic error based SQL injection. In case of blind SQL injections
+we can use special blindSQli plugin but lets assume switched off error displaying and try to find it manually. 
+Using Manual request editor sending 2 requests with different ID values: <code>/user-info.php?id=1</code> 
+and <code>/user-info.php?id=1%2b1</code>, then sending it to Compare tool.</p>
+<p><img alt="Compare tool" src="https://oxdef.info/images/2014/12/w3af_compare_tool.png"></p>
+<p>As you can see our algebraic expression works correctly inside SQL interpreter and we get user information for user
+with ID 2. Further steps can be of course exploitation with w3af's attack plugins or manually.</p>
+<h2>Outro</h2>
+<p>Now we have seen w3af in action and it is really powerful tool for security testing of web applications. 
+But <strong>framework</strong> is not buzzword in the definition of w3af - number of plugins is striking demonstration for it. 
+It is really easy to extend its functionality, you can write your own plugin for various purposes. But it is 
+a good reason for writing the next article.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://oxdef.info/tag/w3af">w3af</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>
+  &copy;  2018 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " oxdef ",
+  "url" : "https://oxdef.info",
+  "image": "/images/dots.png",
+  "description": ""
+}
+</script>
+
+</body>
+</html>

