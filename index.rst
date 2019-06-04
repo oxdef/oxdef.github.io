@@ -1,4 +1,3 @@
-
 .. image:: images/dots.png
    :align: center
 
@@ -28,7 +27,7 @@ Projects
 Talks
 =====
 
-* "Security Culture: Here be Hackers", `OWASP Global AppSec Tel Aviv 2019 <https://telaviv.appsecglobal.org/>`_
+* `"Security Culture: Here be Hackers" <https://speakerdeck.com/oxdef/security-culture-here-be-hackers>`_, `OWASP Global AppSec Tel Aviv 2019 <https://telaviv.appsecglobal.org/>`_
 * `"Security in developer’s life: knowledge is power" <https://speakerdeck.com/oxdef/security-in-developers-life-knowledge-is-power>`_, `OWASP Poland Day 2017 <https://telaviv.appsecglobal.org/>`_
 * `"Implementing Content Security Policy at a Large Scale" <https://speakerdeck.com/oxdef/implementing-content-security-policy-at-a-large-scale>`_, `ZeroNights 2017 <https://2017.zeronights.org>`_
 * `"Content Security Policy - the panacea for XSS or placebo?" <https://speakerdeck.com/oxdef/content-security-policy-the-panacea-for-xss-or-placebo>`_, `OWASP AppSec Research EU 2013 <https://www.owasp.org/index.php/AppSecEU2013>`_
