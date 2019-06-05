@@ -9,4 +9,4 @@ logo: assets/images/dots.png
 show_downloads: false
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-minimal
