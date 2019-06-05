@@ -1,0 +1,11 @@
+title: oxdef
+email: oxdef@oxdef.info
+description: ""
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: oxdef
+github_username:  oxdef
+
+# Build settings
+markdown: kramdown
+theme: minima
