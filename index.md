@@ -13,8 +13,8 @@ via email oxdef@oxdef.info ([PGP key](/assets/publickey.txt))
 
 ## Projects
 
-* [CSP Tester](https://github.com/yandex/csp-tester). This extension helps web masters to test web application functionality with Content Security Policy (CSP) version 2.0 implemented.
-* [CSP Reporter](https://github.com/yandex/csp-reporter) - Content Security Policy logs parser 
+* [CSP Tester](https://oxdef.info/csp-tester). This extension helps web masters to test web application functionality with Content Security Policy (CSP) version 2.0 implemented.
+* [CSP Reporter](https://oxdef.info/csp-reporter) - Content Security Policy logs parser 
 
 ## Talks
 

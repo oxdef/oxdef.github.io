@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: CSP Reporter
 permalink: /csp-reporter
 ---
