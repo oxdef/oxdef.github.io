@@ -9,7 +9,9 @@ Head of [OWASP Russian chapter](https://www.owasp.org/index.php/Russia)
 and product security team at [OZON](https://www.ozon.ru). 
 Also known as the developer of a browser extension called CSP Tester 
 and contributor of other security related projects. You can reach me 
-via email oxdef@oxdef.info ([PGP key](/assets/publickey.txt))
+via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publickey.txt))
+
+[![Twitter logo](/assets/images/twitter48.png)](https://twitter.com/oxdef)
 
 ## Projects
 
