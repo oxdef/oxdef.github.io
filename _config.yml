@@ -10,4 +10,5 @@ show_downloads: false
 # Build settings
 markdown: kramdown
 theme: jekyll-theme-minimal
+# For WKD support
 include: [".well-known"]
