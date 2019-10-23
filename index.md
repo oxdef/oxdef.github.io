@@ -15,8 +15,9 @@ via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publick
 
 ## Projects
 
+* [dtrack-audit](https://github.com/ozonru/dtrack-audit). OWASP Dependency Track API client for CI/CD 
 * [CSP Tester](https://oxdef.info/csp-tester). This extension helps web masters to test web application functionality with Content Security Policy (CSP) version 2.0 implemented.
-* [CSP Reporter](https://oxdef.info/csp-reporter) - Content Security Policy logs parser 
+* [CSP Reporter](https://oxdef.info/csp-reporter) - Content Security Policy logs parser
 
 ## Talks
 
