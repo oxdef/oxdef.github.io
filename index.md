@@ -5,7 +5,7 @@ title: Main
 
 # Taras Ivashchenko
 
-Head of [OWASP Russian chapter](https://www.owasp.org/index.php/Russia) 
+Leader of [OWASP Moscow chapter](https://www.owasp.org/index.php/Moscow) 
 and product security team at [OZON](https://www.ozon.ru). 
 Also known as the developer of a browser extension called CSP Tester 
 and contributor of other security related projects. You can reach me 
@@ -15,7 +15,7 @@ via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publick
 
 ## Projects
 
-* [dtrack-audit](https://github.com/ozonru/dtrack-audit). OWASP Dependency Track API client for CI/CD 
+* [dtrack-audit](https://github.com/ozonru/dtrack-audit). [OWASP Dependency Track](https://dependencytrack.org/) API client for CI/CD 
 * [CSP Tester](https://oxdef.info/csp-tester). This extension helps web masters to test web application functionality with Content Security Policy (CSP) version 2.0 implemented.
 * [CSP Reporter](https://oxdef.info/csp-reporter) - Content Security Policy logs parser
 
