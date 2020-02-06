@@ -15,9 +15,10 @@ via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publick
 
 ## Projects
 
-* [dtrack-audit](https://github.com/ozonru/dtrack-audit). [OWASP Dependency Track](https://dependencytrack.org/) API client for CI/CD 
+* [CycloneDX for Go](https://github.com/ozonru/cyclonedx-go). Creates CycloneDX Software Bill-of-Materials (SBOM) from Go (with modules) projects. It can be used with OWASP Dependency Track to motinor security issues in 3rd party modules in Go
+* [dtrack-audit](https://github.com/ozonru/dtrack-audit). [OWASP Dependency Track](https://dependencytrack.org/) API client for intergration into CI/CD pipeline
 * [CSP Tester](https://oxdef.info/csp-tester). This extension helps web masters to test web application functionality with Content Security Policy (CSP) version 2.0 implemented.
-* [CSP Reporter](https://oxdef.info/csp-reporter) - Content Security Policy logs parser
+* [CSP Reporter](https://oxdef.info/csp-reporter). Content Security Policy log parser
 
 ## Talks
 
