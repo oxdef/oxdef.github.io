@@ -18,4 +18,4 @@ Typical workflow looks like:
 5. Confirm a number of CSP violations reported in the Developer Tools Console as well as possible visual changes
 6. Make changes in the policy based on these reports
 
-You can install CSP Tester from [Firefox's AMO](https://addons.mozilla.org/firefox/addon/csp-tester/) or [Google Chrome Web Store](https://chrome.google.com/webstore/detail/csp-tester/ehmipebdmhlmikaopdfoinmcjhhfadlf). The license is GPLv2. Feel free to review the source code and report issues (and sent PRs ;) at [GitHub](https://github.com/yandex/csp-tester)
+You can install CSP Tester from [Firefox's AMO](https://addons.mozilla.org/firefox/addon/csp-tester/) or [Google Chrome Web Store](https://chrome.google.com/webstore/detail/csp-tester/ehmipebdmhlmikaopdfoinmcjhhfadlf). The license is GPLv2. Feel free to review the source code and report issues (and sent PRs ;) at [GitHub](https://github.com/oxdef/csp-tester)
