@@ -22,6 +22,7 @@ via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publick
 
 ## Talks
 
+* [ How to improve software security with OWASP open source initiatives](https://speakerdeck.com/oxdef/how-to-improve-software-security-with-owasp-open-source-initiatives), Samsung Open Source Conference (SOSCON) Russia 2021
 * [2011 <= APP_SECURITY <= 2021. Keynote talk](https://speakerdeck.com/oxdef/keynote-at-zeronights-x-2021), ZeroNights X (2021)
 * [Security Culture: Here be Hackers](https://speakerdeck.com/oxdef/security-culture-here-be-hackers), OWASP Global AppSec Tel Aviv 2019
 * [OWASP Top 10 - 2017 What’s inside?](https://speakerdeck.com/oxdef/owasp-top-10-2017-whats-inside), CENTR Jamboree 2018
