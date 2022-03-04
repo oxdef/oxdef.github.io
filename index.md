@@ -5,8 +5,7 @@ title: Main
 
 # Taras Ivashchenko
 
-Leader of [OWASP Moscow chapter](https://www.owasp.org/index.php/Moscow) 
-and product security team at [OZON](https://www.ozon.ru). 
+Product security team at [Ozon](https://www.ozon.ru) and in the past OWASP Moscow team lead.
 Also known as the developer of a browser extension called CSP Tester 
 and contributor of other security related projects. You can reach me 
 via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publickey.txt))
