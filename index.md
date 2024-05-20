@@ -5,12 +5,7 @@ title: Main
 
 # Taras Ivashchenko
 
-Product security engineer at [Wolt](https://wolt.com) and in the past OWASP Moscow team lead.
-Also known as the developer of a browser extension called CSP Tester 
-and contributor of other security related projects. You can reach me 
-via email [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publickey.txt))
-
-[![Twitter logo](/assets/images/twitter48.png)](https://twitter.com/oxdef)
+You can email me at [oxdef@oxdef.info](mailto:oxdef@oxdef.info) ([PGP key](/assets/publickey.txt))
 
 ## Projects
 
